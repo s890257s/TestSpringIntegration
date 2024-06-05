@@ -66,7 +66,8 @@ public class ChainedHttpProcessingConfig {
 			params.set("name", greetInConsole);
 
 			MessagingTemplate messagingTemplate = new MessagingTemplate();
-			messagingTemplate.send(secondChannel(), new GenericMessage<>(params));
+			messagingTemplate.send(secondChannel(), new GenericMessage<>(params, message.getHeaders())); // 保留 headers
+
 		};
 	}
 
@@ -89,7 +90,6 @@ public class ChainedHttpProcessingConfig {
 			LinkedMultiValueMap<String, String> params = (LinkedMultiValueMap<String, String>) message.getPayload();
 
 			MessageChannel replyChannel = (MessageChannel) message.getHeaders().getReplyChannel();
-			System.out.println("AAA:" + replyChannel);
 
 			if (replyChannel != null) {
 				replyChannel.send(new GenericMessage<>(params.get("name")));
